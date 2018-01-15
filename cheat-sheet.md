@@ -49,3 +49,21 @@ Starting in 2.1, the Ansible debug moduel supports a verbosity parameter that su
 Execute ansible ad-hoc in several hosts without inventory:
 
 `$ ansible all -i host1.org, -m shell -a 'uptime' -u user1 -k`
+
+
+## CONTROL AND MANAGED NODE REQUIREMENTS
+
+### CONTROL NODE
+Ansible can be run from any machine with Python 2 (versions 2.6 or 2.7) or Python 3 (versions 3.5 and higher). Windows is not supported for control machine.
+
+### MANAGED NODE
+For this kind of nodes the following requirements are needed:
+
+ * SSH (default uses sftp but you can switch to scp in ansible.cfg)
+ * Python 2.6 or later**
+
+** Ansible raw module and the script module do not even need python, so you can use ansible to install python-simplejson using the raw module, which then allows you to use everything else.
+ * libselinux-python if you have SELinux enabled on remote nodes (to use copy/file/template functions in Ansible)
+
+
+
