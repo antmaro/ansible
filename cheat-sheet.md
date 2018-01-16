@@ -69,4 +69,22 @@ For this kind of nodes the following requirements are needed:
  * libselinux-python if you have SELinux enabled on remote nodes (to use copy/file/template functions in Ansible)
 
 
-## INVENTORY
+## Configuration File
+[configuration_file.html](http://docs.ansible.com/ansible/latest/intro_configuration.html)
+
+Use in order of preference:
+ + Contents of `$ANSIBLE_CONFIG` environment variable
+ + `./ansible.cfg`
+ + `~/.ansible.cfg`
+ + `/etc/ansible/ansible.cfg`
+
+To see what will be the config used by ansible:
+```ansible --version
+   ansible 2.3.1.0
+   config file = /tmp/ansible.cfg
+```
+
+## INVENTORY FILES
+[intro_inventory.html](http://docs.ansible.com/ansible/latest/intro_inventory.html), [intro_dynamic_inventory.html](http://docs.ansible.com/ansible/latest/intro_dynamic_inventory.html)
+
+
