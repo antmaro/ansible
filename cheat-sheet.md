@@ -79,7 +79,8 @@ Use in order of preference:
  + `/etc/ansible/ansible.cfg`
 
 To see what will be the config used by ansible:
-```ansible --version
+``` bash
+   ansible --version
    ansible 2.3.1.0
    config file = /tmp/ansible.cfg
 ```
