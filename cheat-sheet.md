@@ -1,6 +1,7 @@
 # Some notes about Ansible
+Antonio Mari, January 2018, v1.0 (for Ansible 2.2)
 
-## BEST PRACTICES (source https://www.ansible.com/blog/ansible-best-practices-essentials)
+## BEST PRACTICES (source [best_practices](https://www.ansible.com/blog/ansible-best-practices-essentials)
 
 ### 1. Name your plays and Tasks
 Always name you plays and tasks, for example:
@@ -66,4 +67,4 @@ For this kind of nodes the following requirements are needed:
  * libselinux-python if you have SELinux enabled on remote nodes (to use copy/file/template functions in Ansible)
 
 
-
+## INVENTORY
