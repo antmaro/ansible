@@ -1,7 +1,7 @@
 # Some notes about Ansible
 Antonio Mari, January 2018, v1.0 (for Ansible 2.2)
 
-## BEST PRACTICES (source [best_practices](https://www.ansible.com/blog/ansible-best-practices-essentials)
+## BEST PRACTICES (source [best_practices](https://www.ansible.com/blog/ansible-best-practices-essentials))
 
 ### 1. Name your plays and Tasks
 Always name you plays and tasks, for example:
@@ -52,7 +52,9 @@ Execute ansible ad-hoc in several hosts without inventory:
 `$ ansible all -i host1.org, -m shell -a 'uptime' -u user1 -k`
 
 
+
 ## CONTROL AND MANAGED NODE REQUIREMENTS
+[requirements](http://docs.ansible.com/ansible/latest/intro_installation.html#control-machine-requirements)
 
 ### CONTROL NODE
 Ansible can be run from any machine with Python 2 (versions 2.6 or 2.7) or Python 3 (versions 3.5 and higher). Windows is not supported for control machine.
