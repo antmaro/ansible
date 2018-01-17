@@ -143,6 +143,4 @@ You can do combinations:
 `websersers:dbservers:&staging:!phoneix`
 
 You can also user variables if you want to pass some group specifiers via the "-e" argument to any ansible playbook:
-`webservers:!{{excluded}}:&{{required}}
-
-`
+`webservers:!{{excluded}}:&{{required}}`
