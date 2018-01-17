@@ -144,3 +144,22 @@ You can do combinations:
 
 You can also user variables if you want to pass some group specifiers via the "-e" argument to any ansible playbook:
 `webservers:!{{excluded}}:&{{required}}`
+
+Also you can use wildcards: `*.exampe.com` or 192.168.1.* and regular expressions: `~(web|db).*\.example\.com`
+
+And finally you can refer to hosts within the group by adding a subscript to the group name. For instance if you have the following group:
+``` yaml
+[webservers]
+web1
+web2
+web3
+```
+
+You can select a host or subset of hosts from a group by their position:
+``` yaml
+webservers[0]	# web1
+webservers[0:1]	# web1,web2
+webservers[1:]	# web2,web3
+```
+
+You can use 
