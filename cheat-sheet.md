@@ -80,12 +80,52 @@ Use in order of preference:
 
 To see what will be the config used by ansible:
 ``` bash
-   ansible --version
-   ansible 2.3.1.0
-   config file = /tmp/ansible.cfg
+   # ansible --version
+     ansible 2.3.1.0
+     config file = /tmp/ansible.cfg
 ```
 
 ## INVENTORY FILES
 [intro_inventory.html](http://docs.ansible.com/ansible/latest/intro_inventory.html), [intro_dynamic_inventory.html](http://docs.ansible.com/ansible/latest/intro_dynamic_inventory.html)
+
+Two kind of definitions for inventory file:
+
+### INI-file structure: 
+Blocks define groups. Hosts allowed in more than one group. 
+
+Hostname ranges: `www[01:50].example.com`, `db-[a:f].example.com`
+
+Per-host variables: `thor.example.com ansible_ssh_port=2424 variable1=var1 variable2=var2`
+
+- `[foo:children]`: new group foo containing all members if included groups
+- `[foo:vars]`: variable definition for all members of group foo
+
+Inventory file defaults to `/etc/ansible/hosts`. Veritable with `-i` or in the configuration file. The file can also be a dynamic inventory script. If a directory, all contained files are processed.
+
+### YAML file
+Definition of inventory:
+``` yaml
+ all:
+   hosts:
+     mail.example.com
+   children:
+     webservers:
+       hosts:
+         foo.example.com:
+         bar.example.com:
+    dbservers:
+       hosts:
+         one.example.com:
+         two.example.com:
+         three.example.com:
+```
+
+Definition of variables for a host (or group)
+``` yaml
+hosts:
+  jumper:
+    ansible_port: 5555
+    ansible_host: 192.0.2.50
+```
 
 
