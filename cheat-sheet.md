@@ -128,4 +128,21 @@ hosts:
     ansible_host: 192.0.2.50
 ```
 
+## PATTERNS
+[intro_patterns](http://docs.ansible.com/ansible/latest/intro_patterns.html)
 
+Used on the `ansible` command line or in playbooks:
+
+* `all` or `*`
+* hostname: `lab.example.com`
+* groupname: `webservers` or `webservers:dbservers`
+* exclude: `webservers:!phoneix`
+* intersection: `webservers:&staging`
+
+You can do combinations: 
+`websersers:dbservers:&staging:!phoneix`
+
+You can also user variables if you want to pass some group specifiers via the "-e" argument to any ansible playbook:
+`webservers:!{{excluded}}:&{{required}}
+
+`
