@@ -7,3 +7,6 @@
         msg: "Hello World"
     - name: Hostname of machine 
       shell: hostname -f
+      register: output
+    - debug:
+        msg: "This host is {{ output.stdout }}"
