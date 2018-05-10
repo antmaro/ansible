@@ -1,0 +1,9 @@
+---
+- name: Hello and hostname playbook to test
+  hosts: all
+  tasks:
+    - name: Hello Message
+      debug:
+        msg: "Hello World"
+    - name: Hostname of machine 
+      shell: hostname -f
