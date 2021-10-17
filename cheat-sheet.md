@@ -170,3 +170,25 @@ These are my favourite options in .vimrc to edit yaml files for Ansible:
 autocmd FileType yaml setlocal ai=2 ts=2 sw=2 et nu cuc
 autocmd FileTyep yaml colo desert
 ``
+
+## Jinja2 Templates
+
+- Jinja templates uses {% EXPR %} for expressions and logic
+- And {{ }} for outputting the results and expressions.
+
+For example:
+
+{{ ansible_facts['default_ipv4']['address'] }}  {{ ansible_facts['hostname'] }}
+
+### Control Structures
+
+#### Using loops
+
+In this example the *user* variable is replaced with all the values included in the *users* variable
+``` yaml
+{% for user in users %}
+	{{ user }}
+{% end for %}
+```
+
+
