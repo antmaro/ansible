@@ -162,4 +162,11 @@ webservers[0:1]	# web1,web2
 webservers[1:]	# web2,web3
 ```
 
-You can use 
+## Configuration VIM for YAML
+
+These are my favourite options in .vimrc to edit yaml files for Ansible:
+
+```bash
+autocmd FileType yaml setlocal ai=2 ts=2 sw=2 et nu cuc
+autocmd FileTyep yaml colo desert
+``
