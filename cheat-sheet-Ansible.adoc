@@ -1,9 +1,10 @@
-# Some notes about Ansible
-Antonio Mari, January 2018, v1.0 (for Ansible 2.2)
+= Some notes about Ansible
+author: Toni Mari Romero 
+email: amarirom@redhat.com
 
-## BEST PRACTICES (source [best_practices](https://www.ansible.com/blog/ansible-best-practices-essentials))
+== BEST PRACTICES (source [best_practices](https://www.ansible.com/blog/ansible-best-practices-essentials))
 
-### 1. Name your plays and Tasks
+=== 1. Name your plays and Tasks
 Always name you plays and tasks, for example:
 
 ```yaml
@@ -16,7 +17,7 @@ Always name you plays and tasks, for example:
         state: latest
 ```
 
-### 2. Use Prefixes and Human Meaningful Names with Variables
+=== 2. Use Prefixes and Human Meaningful Names with Variables
 The recommendation is prefix variables with the source or target of the data it represents. Prefixing variable is particulary vital with developing reusable and portables roles.
 
 ```yaml
@@ -185,11 +186,11 @@ For example:
 #### Using loops
 
 In this example the *user* variable is replaced with all the values included in the *users* variable
-``` yaml
+ yaml
 {% for user in users %}
 	{{ user }}
 {% end for %}
-```
+
 
 === Controling Task Execution
 
@@ -207,13 +208,32 @@ The order when the tasks are running:
 ==== import_ vs include_
 
 include_role --> dynamically include a role
-~~
 Ansible parses and inserts the role in play when it reaches the include role
 
 import_role --> statically import a role
-~~~
 Ansible parses the role at the begining and it detects errors before starting executing tasks.
-
-:
-
+"
 	 
+== Managing Task Execution
+
+==== Optimizing Execution Speed
+
+In Ansible you can be beneficial of the use of callbacks plugins to get some statiscitcs like the time that each tasks "tarda" for running. To activate this plugins via `ansible.cfg`:
+
+[source,yaml]
+----
+[defaults]
+callback_whitelist=timer,profile_tasks
+----
+
+== Data Filtering
+
+Check if data is defined
+
+- mandatory
+   {{ my_value | mandatory }}
+
+
+- default -->  {{ my_value | default(my_default, True)}}
+
+- You can leave the default value undefined --> {{ supplementary_groups['jonfoo'] | default(omit) }}
