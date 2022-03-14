@@ -1,0 +1,7 @@
+= Tower automation stuff
+
+The tool used for automation is tower-cli, you can access to the official documentation https://docs.ansible.com/ansible-tower/3.5.3/html/towerapi/tower_cli.html[here] 
+
+== Modifying a Project
+
+```tower-cli  project modify 

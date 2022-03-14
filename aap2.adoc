@@ -1,0 +1,13 @@
+= Notes about Ansible Automation Platform 2
+
+== Ansible navigator
+
+This is the new wrapper which includes the old tools `ansible-playbook`, `ansible-config`, `ansible-inventory`.
+
+ansible-playbook -i inventory playbook.yml
+
+ansible-navigator run playbook.yml -i inventory -m stdout --> to get output in the same format as the previous ansible-playbook
+
+=== Installing Automation Content Navigator
+
+``  

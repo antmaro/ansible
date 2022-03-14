@@ -4,7 +4,7 @@ email: amarirom@redhat.com
 
 == BEST PRACTICES (source [best_practices](https://www.ansible.com/blog/ansible-best-practices-essentials))
 
-=== 1. Name your plays and Tasks
+ 1. Name your plays and Tasks
 Always name you plays and tasks, for example:
 
 ```yaml
@@ -17,7 +17,7 @@ Always name you plays and tasks, for example:
         state: latest
 ```
 
-=== 2. Use Prefixes and Human Meaningful Names with Variables
+ 2. Use Prefixes and Human Meaningful Names with Variables
 The recommendation is prefix variables with the source or target of the data it represents. Prefixing variable is particulary vital with developing reusable and portables roles.
 
 ```yaml
@@ -26,7 +26,7 @@ apache_port: 80
 ssh_port: 22
 ```
 
-### 3. Use Native YAML Syntax
+ 3. Use Native YAML Syntax
 Use native YAML for best readability, the native YAML has more lines but those lines are shorter reducing horizontal scrolling and line wrapping.
 
 ### 4. Use Modules before Run Commands
@@ -163,16 +163,17 @@ webservers[0:1]	# web1,web2
 webservers[1:]	# web2,web3
 ```
 
-## Configuration VIM for YAML
+== Configuration VIM for YAML
 
 These are my favourite options in .vimrc to edit yaml files for Ansible:
 
-```bash
+[source.yaml]
+----
 autocmd FileType yaml setlocal ai ts=2 sw=2 et nu cuc
 autocmd FileTyep yaml colo desert
-``
+----
 
-## Jinja2 Templates
+== Jinja2 Templates
 
 - Jinja templates uses {% EXPR %} for expressions and logic
 - And {{ }} for outputting the results and expressions.
@@ -181,9 +182,9 @@ For example:
 
 {{ ansible_facts['default_ipv4']['address'] }}  {{ ansible_facts['hostname'] }}
 
-### Control Structures
+=== Control Structures
 
-#### Using loops
+==== Using loops
 
 In this example the *user* variable is replaced with all the values included in the *users* variable
  yaml
@@ -228,12 +229,359 @@ callback_whitelist=timer,profile_tasks
 
 == Data Filtering
 
-Check if data is defined
+=== Variables Type
 
-- mandatory
-   {{ my_value | mandatory }}
+==== Strings
+A sequence of characteres.
+
+[source,yaml]
+----
+my_string: This contains a string
+----
+
+For better readability, you can use pipe caracter `|` to break the string in several lines, or the operator `>` to suppres the break line but used for read beatter.
+
+[source,yaml]
+----
+string_with_break_lines: |
+This string 
+has several
+lines
+----
+
+[source,yaml]
+----
+string_whitout_line_breask: >
+This string will
+shown in just
+one line
+----
+
+==== Numbers
+
+- Integer:
+`number: 10`
+
+- Float: `15.2`
+- Scientific: `0.20e2`
+- String with no number: `"15"`
+
+==== Booleans
+yes, no,y,n,on,off,true or false
+
+==== Date
+The date has to be in the *ISO-8601* standard, for example:
+
+[source,yaml]
+----
+date_time_ok: 2019-05-30T10:05:25.23+02:00
+date_time_short: 2019-05-30
+----
+
+==== List of Arrays, or hashes
+
+Array is a list of values and the difference with Dictionaries is that the second ara a list of `key=values`
+
+Two different ways to define an Array in Yaml:
+
+[source,yaml]
+----
+my_own_list: ['Tere', 'Alba', 'Ainhoa']
+my_own_list_2:
+  - Tere
+  - Alba
+  - Ainhoa
+----
+
+To access the values of the Array, like follows:
+                                     
+ 12     - name: Check how to access the element of the array
+ 13       assert:                          
+ 14         that:                          
+ 15           - my_own_list['0'] == 'Tere'
 
 
-- default -->  {{ my_value | default(my_default, True)}}
 
-- You can leave the default value undefined --> {{ supplementary_groups['jonfoo'] | default(omit) }}
+==== Dictionaries
+Consist of key=values list
+
+This is an example of how to define a dictionary:
+
+[source,yaml]
+----
+my_dictionary: { Emma: Human, Laika: Dog, Alba: Human }
+
+my_dictionary_2: 
+  Emma: Human
+  Laika: Dog
+  Alba: Human
+----
+
+An example of how to access the elements of a dictionary:
+
+
+[source,yaml]
+----
+assert:
+  that: my_dictionary['Laika'] != 'Human'
+----
+
+[NOTE]
+You can also use the notation 'my_dictionary.Laika' to access the element, but this is not recommended because it can collide with some reserverd names for attributes of methos of Python dict.
+
+=== Processing Data with Filters
+
+You can use Jinja2 filtering options to convert the given variables. You can check the https://jinja.palletsprojects.com/en/2.11.x/templates/#map[Jinja offical documentation]
+
+For instance, to convert a number variable to string:
+
+[source,yaml]
+----
+{{ my_number | string }}
+{{ my_name | capitalize }}
+----
+
+You can also process the information using the `unique` and `eq` Jinja filters:app-name: 
+
+[source,yaml]
+----
+ - name: Playing with data processing
+      assert:
+        that: 
+        - "{{ [1, 4, 2, 2] | unique | sort }} is eq ( [1, 2, 4] )"
+      register: output
+      tags: filter
+----
+
+== Using Filter to Manipulate Data
+
+=== Handling undefined variables
+
+*Providing default values*
+
+Examples:
+
+`{{ some_variable | default(5) }} : some_variable = 5` --> some_variable = 5 when it is not defined
+
+`{{ lookup(''env), 'MY_USER') | default('admin', true)` --> use default value admin when the variable MY_USER is not defined or is empty
+
+
+*Making variables optional*
+
+By default Ansibe requires values for all variables in a templated expresion. I you want to make optional some variable you can use special variable `omit`
+:
+
+[source,yaml]
+----
+- name: Create users with optional homedir
+  user:
+    name: "{{ item.name }}"
+    shell: /bin/bash
+    groups: wheel
+    append: yes
+    home: "{{ item.homedir | default(omit) }}" 
+  loop:
+    - name: james
+      homedir: /opt/james
+    - name: toni
+    - name: pepe
+----
+
+In this example the default home directory for users toni an Pepe  will be /home/{{ user.name }} and for james will be /opt/james.
+
+*Mandatory values*
+
+To setup a variable which is mandatory. If there is no value provided you will get an error.
+
+`{{ my_value | mandatory }}`
+
+*Defining different values for true/false/null(ternary)*
+
+`{{ (pet_type == "dog") | ternary('Dog','Cat') }}` --> if sentence is True return Dog and if false cat.
+
+In addition, you can define a one value to use on tru, one value on false and third value on null:
+
+`{{ enabled | ternary('no shutdown', 'shutdown', omit) }}`
+
+
+*Managing data Types*
+
+Discovering data types
+
+[source,yaml]
+----
+ - name: Check type from variable
+    debug:
+      msg: "{{ my_number | default(42.0)  | type_debug }}" 
+
+TASK [Check type from variable] ******************************************************************************************************************************
+ok: [127.0.0.1] => {
+    "msg": "float"
+}
+
+----
+
+Transforming dictorionaris into lists
+
+
+
+=== Speacial variables
+==== Magic variables
+
+`ansible_check_mode`
+Boolean that indicates ansible is in check mode
+
+`ansible_config_file`: The full path of ansible.cfg
+
+`ansible_forks`: integer showing number of maximum forks available in the runing tasks
+
+`ansible_inventory_sources`: List of sources used as inventory
+
+`inventory_hostname`: the current hosts being iterated over in the play
+
+`hostvars`: A dictionary/map with all the hosts in inventory and variables assigned to them
+
+`https://docs.google.com/document/d/1NsJSJjO5e6bpNHg0rVzY30fm6poF5VLZCzfiEDWX3KE/editgroup_names`: List of groups the current host is part of
+
+
+Check all the list of available https://docs.ansible.com/ansible/latest/reference_appendices/special_variables.html[magic variables]
+
+==== Facts
+
+These are variables gathered when ansible has the flag `gather_facts` set to true.
+
+`ansible_facts`
+
+=== Connections variables
+
+`ansible_host`: The ip/name of the target host ot use instead inventory_hostname
+
+`ansible_user`: the Ansible user logs in as.
+
+=== Overview of Selected Filters
+There are many filters available, ones from Jinja2 and others provided by Red Hat Ansible engine.
+
+==== Check if a variable is Defined
+
+*mandatory*
+
+`{{ my_variable | mandatory }}`
+
+*default*
+
+You can establish a default value in case there is no value provided, for example:app-name: 
+`{{ my_vaule | default('my_default, True') }}`
+
+*omit*
+
+You can also force to an undefined value in case there is no value provided:
+
+`"{{ my_value | default(omit) }}"`
+
+==== Mathematical Calculation
+
+You can use the following arithmetic operations:
+
+[cols="1,1"]
+|===
+| *Operator*
+| *Purpose*
+
+| + 
+| Add two numbers
+
+| - 
+| Subsctract two number
+|===
+
+For example, you can use
+
+
+==== Manipulate Lists
+
+To sum the values of a List:
+
+[source,yaml]
+----
+tasks:
+  - name: The sum of a list
+    debug:
+      msg: "The sum of a list is [1,2,3,4]: {{ [1, 2, 3, 4] | sum }}"
+----
+
+
+*Merging Lists*
+
+You can use `flatten` to merge several lists.
+[source,yaml]
+----
+   - name: Merge several lists
+      debug:
+        msg: "{{ [ 2, 3, 4, [ 2, 5, 6]] | flatten }}"
+      tags: unir
+
+----
+Or sorting a list:
+
+"{{ [2, 3, 9, 1 ,5, 4, 7 ,6 ,8] | sort }}"
+
+*Modifying Order*
+
+"{{ [2, 4, 5, 8. 9 ] | reverse | list }}"
+
+"{{ [2, 4, 5, 8. 9 ] | sort | list }}"
+
+*Find the difference*
+
+"{{  [ 2, 3, 5, 8, 9 ] | difference([2, 4, 16]])}}"
+
+
+==== Manipulating Dictionaries
+
+*Merge dictionaries*
+
+[source,yaml]
+----
+   - name: Merge dictionaries 
+      debug:
+        msg: "{{ { 'A': 1, 'B':5 } | combine( {'B':2, 'C':3 }) }}"
+----
+
+
+==== Hashing, Encodin, and Manipulating Strings
+
+*Hashing strings and passwords*
+
+The `hash` filter returns the has value in string format. As an example:
+
+[source,yaml]
+----
+- name: Use hash filter in strings
+  vars:
+    # generated by "echo 'Toni' | sha1sum"
+    expected: 'ee0f3f344826f230ec3581f9924aee07945b0cbb'
+  tasks:
+    assert: 
+      that: 
+        - "{{ 'Toni' | hash('sha1') }} is eq( expected )"
+----
+
+
+
+==== Data Filtering
+
+*Query Lines*
+
+Read the files and save it in lines
+[source,yaml]
+----
+{{ query('lines','cat /etc/pass') }}
+
+----
+
+Difference between `query` and `lookup` plugins are:
+
+- `query` is a Jinja2 function for invoking lookup plugins. The main difference is that `query` will always return a list.
+- `lookup` is an Ansible plugin, and the default behaviour of `lookup` is to return a string of comma separated values. You can use `wantList=True` to have the same list return as `query`.
+
+
