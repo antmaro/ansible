@@ -10,4 +10,89 @@ ansible-navigator run playbook.yml -i inventory -m stdout --> to get output in t
 
 === Installing Automation Content Navigator
 
-``  
+``
+
+
+
+
+== Automation Controller and Hub Installation
+
+0. Prerequisites
+
+- Access without password to both machines
+- If your system does not accomplish minimum requirements for RAM, you can disable this check using `-e ignore_preflight_errors=true` once you run the installer. 
+
+1. Subscribe both systems
+
+```
+POOL_ID=$(subscription-manager list --all --available --matches="MCT3694" | grep Pool | awk '{ print $3}')
+subscription-manager attach --pool=$POOL_ID
+subscription-manager repos --enable ansible-automation-platform-2.1-for-rhel-8-x86_64-rpms
+```
+
+2. Download the installer for both systems.
+
+https://access.redhat.com/downloads/content/480
+
+3. Install Private Automation Hub
+
+Decompress the installer, and modify the inventory with the following information:
+
+```
+[automationcontroller]
+# leave empty this part for the hub system
+
+[automationhub]                        
+hub.lab.net ansible_connection=local
+
+[all:vars]
+registry_url='registry.redhat.io'
+# The following values need to be created from https://access.redhat.com/terms-based-registry/#accounts
+registry_username='xxxx|amarirom'
+registry_password='xxx'
+
+automationhub_admin_password='password'
+
+automationhub_pg_host=''
+automationhub_pg_port=''
+
+automationhub_pg_database='automationhub'
+automationhub_pg_username='automationhub'
+automationhub_pg_password='password'
+automationhub_pg_sslmode='prefer'
+
+
+```
+
+
+4. Install Controller
+
+Same as the hub but with variables for controller
+
+
+5. Working with Automation Hub
+
+Once you have automation hub available, you can download a tar image from it with the following isntructions:
+
+```
+podman login hub.lab.net
+podman pull hub.lab.net/ee-29-rhel8:latest
+```
+
+To download from registry.redhat.io:
+
+  1. podmain login registry.redhat.io
+  2. podman search registry.redhat.io/ansible*
+  3. podman pull registry.redhat.io/ansible-automation-platform-21/ansible-builder-rhel8
+  4. [root@workstation ~]# podman images
+REPOSITORY                                                               TAG         IMAGE ID      CREATED     SIZE
+registry.redhat.io/ansible-automation-platform-21/ansible-builder-rhel8  latest      033242d8de80  7 days ago  361 MB
+[root@workstation ~]# podman save -o ansible-builder-rhel8.tar 033242d8de80
+
+  5. podman pull registry.redhat.io/ansible-automation-platform-21/ansible-builder-rhel8
+  6. Now, you are ready to check the image and save it as a tar file
+  ```
+podman images
+podman save -o ansible-builder-rhel8.tar IMAGE_ID```
+
+
