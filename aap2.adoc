@@ -14,9 +14,6 @@ ansible-navigator run playbook.yml -i inventory -m stdout --> to get output in t
 
 === Installing Automation Content Navigator
 
-``
-
-
 
 
 == Automation Controller and Hub Installation
