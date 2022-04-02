@@ -236,7 +236,7 @@ A sequence of characteres.
 
 [source,yaml]
 ----
-my_string: This contains a string
+my_string_var: This contains a string
 ----
 
 For better readability, you can use pipe caracter `|` to break the string in several lines, or the operator `>` to suppres the break line but used for read beatter.
@@ -245,8 +245,8 @@ For better readability, you can use pipe caracter `|` to break the string in sev
 ----
 string_with_break_lines: |
 This string 
-has several
-lines
+is represented 
+with several lines
 ----
 
 [source,yaml]
@@ -361,7 +361,7 @@ You can also process the information using the `unique` and `eq` Jinja filters:a
 
 Examples:
 
-`{{ some_variable | default(5) }} : some_variable = 5` --> some_variable = 5 when it is not defined
+`{{ some_variable | default(5) }}`  --> some_variable = 5 when it is not defined
 
 `{{ lookup(''env), 'MY_USER') | default('admin', true)` --> use default value admin when the variable MY_USER is not defined or is empty
 
@@ -421,7 +421,10 @@ ok: [127.0.0.1] => {
 
 ----
 
-Transforming dictorionaris into lists
+*Transforming dictorionaris into lists*
+
+Use `dict2items` filter to transform a dictionary into a list of items suitable for `looping`:
+
 
 
 

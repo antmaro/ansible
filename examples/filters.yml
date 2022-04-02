@@ -1,0 +1,27 @@
+---
+- name: Playing with filters
+  hosts: workstation
+  remote_user: root
+  gather_facts: false
+  vars:
+    #test: 
+  tasks:
+
+    - name: Create var which is mandatory
+      debug:
+        msg: "This var should be mandatory {{ test | mandatory }}"
+    
+
+    - name: Create users with optionan homedir
+      user:
+        name: "{{ item.name }}"
+        shell: /bin/bash
+        groups: wheel
+        append: yes
+        home: "{{ item.homedir | default(omit) }}"
+      loop:
+        - name: james
+          homedir: /opt/james
+        - name: toni
+        - name: pepe
+   

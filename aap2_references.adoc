@@ -1,0 +1,18 @@
+
+=== Private Automation Hub
+
+- https://access.redhat.com/documentation/en-us/red_hat_ansible_automation_platform/2.1[Official Documentation]
+- https://www.youtube.com/playlist?list=PLdu06OJoEf2aBf5nV5qQZmy2AH_Wif5vU[YouTube Automation Hub]
+- https://www.ansible.com/blog/fun-with-private-automation-hub-part-1[FUn with Private Automation Hub]
+- Videos from Automation Practice:
+	+ How to https://drive.google.com/drive/u/1/folders/1_K4umkP_5pnPbYIJkIjvUh50OjHnZmZa[Sync Collections]
+	+ How to https://drive.google.com/drive/u/1/folders/1_K4umkP_5pnPbYIJkIjvUh50OjHnZmZa[Push Execution Env]
+
+
+=== Automation Mesh
+
+- https://docs.google.com/document/d/1GRgY5WSRyIWhS5z7TwsY7F5KWFSJDVTOiWq2MXGbbx4/edit#heading=h.rv7jfigj2hk6[Automation Mesh FAQ]
+
+=== Automation Controller
+
+=== 

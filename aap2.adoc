@@ -1,4 +1,8 @@
-= Notes about Ansible Automation Platform 2
+:includedir: ./
+
+== References
+
+include::{includedir}/aap2_references.adoc[]
 
 == Ansible navigator
 
@@ -70,7 +74,9 @@ automationhub_pg_sslmode='prefer'
 Same as the hub but with variables for controller
 
 
-5. Working with Automation Hub
+=== Working with Automation Hub
+
+==== Playing with Execution Environments or Container Registry
 
 Once you have automation hub available, you can download a tar image from it with the following isntructions:
 
@@ -79,7 +85,7 @@ podman login hub.lab.net
 podman pull hub.lab.net/ee-29-rhel8:latest
 ```
 
-To download from registry.redhat.io:
+To download a tar file from registry.redhat.io:
 
   1. podmain login registry.redhat.io
   2. podman search registry.redhat.io/ansible*
@@ -94,5 +100,11 @@ registry.redhat.io/ansible-automation-platform-21/ansible-builder-rhel8  latest 
   ```
 podman images
 podman save -o ansible-builder-rhel8.tar IMAGE_ID```
+
+
+
+==== Playing with Collections
+
+Check the video from Herve https://drive.google.com/drive/u/1/folders/1_K4umkP_5pnPbYIJkIjvUh50OjHnZmZa[Sync Collections], about how to sync Certified, Community and your own Collections.
 
 
