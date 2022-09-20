@@ -588,3 +588,86 @@ Difference between `query` and `lookup` plugins are:
 - `lookup` is an Ansible plugin, and the default behaviour of `lookup` is to return a string of comma separated values. You can use `wantList=True` to have the same list return as `query`.
 
 
+
+== Ansible Navigator
+
+=== Documentation
+
+Getting help:
+`ansible-navigator subcommand --help`
+
+== Collections
+
+Collections are basically how Ansible content is packaged and distributed.
+A collection provides a set of related modules, roles, and plug-ins that you can download to your ansible control node.
+
+With Collections, you can separate the ansible core development from other ansible's content vendors.
+
+=== Namespaces
+
+A collection is organized into `namespaces` to make it eaiser to specify different collections.
+To list a specify collection, you must use a valid fully qualified collection name (FQCN).
+
+Examples of FQCN:
+
+- From community namespace: `community.crypto`, `community.postgresql`, etc.
+- For redhat supported collections: `redhat.satellite`, `redhat.insights`, etc.
+
+The name of namespaces are limited to ASCII lowercase letters, numbers, and underscores, must be at least two characters long, and must not start with an underscore.
+
+=== Using Ansible Content Collections
+
+To access the documentation `ansible-navigator collections --eei ee-supported-rhel8:latest` or `ansible-navigator doc -l --eei ee-supported-rhel8:latest -m stdout.postgresql`, etc.
+- For redhat supported collections: `redhat.satellite`, `redhat.insights`, etc.
+
+The name of namespaces are limited to ASCII lowercase letters, numbers, and underscores, must be at least two characters long, and must not start with an underscore.
+
+=== Using Ansible Content Collections
+
+To access the documentation `ansible-navigator collections --eei ee-supported-rhel8:latest` or `ansible-navigator doc -l --eei ee-supported-rhel8:latest -m stdout``
+
+
+=== Ansible navigator configuration
+
+Formats:
+- JSON or YAML
+- ansible-navigator.yml or ansible-navigator.json
+
+Ansible navigator looks for a settings file in the following order and uses the first file that it finds:
+- `ANSIBLE_NAVIGATOR_CONFIG` env variable.
+- `ansible-navigator.yml` file in your current Ansible project directory.
+- `~/.ansible-navigator.yml` in your home directory
+
+
+Example of `ansible-navigator.yml` config:
+
+[subs="quotes"]
+----
+---
+ansible-navigator:
+  ansible:
+    config: /tmp/ansible.cfg
+
+  ansible-runner:
+    arfifact-dir: /tmp/test1
+  logging:
+    level: critical
+
+  editor:
+    command: /bin/emacs
+
+  playbook-artifact:
+    enable: false
+  
+  execution-environment:
+    image: ee-supported-rhel8:latest
+    pull-policy: always
+----
+
+
+
+=== References
+
+- Ansible Navigator settings[https://ansible-navigator.readthedocs.io/en/latest/settings/]
+
+
