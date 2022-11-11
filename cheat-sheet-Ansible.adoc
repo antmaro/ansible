@@ -588,6 +588,48 @@ Difference between `query` and `lookup` plugins are:
 - `lookup` is an Ansible plugin, and the default behaviour of `lookup` is to return a string of comma separated values. You can use `wantList=True` to have the same list return as `query`.
 
 
+==== Using selectattr filter
+
+[source,yaml]
+----
+
+---
+- name: Playing with selectattr
+  hosts: localhost
+  become: false
+  tasks:
+
+    - name: Get using selectattr the 'name' elements from the list of dictionaries in 'hosts'
+      vars:
+        hosts:
+          - name: bastion
+            ip:
+              - 192.168.1.254
+              - 192.168.1.1
+          - name: classroom
+            ip:
+              - 192.168.1.254
+              - 192.168.1.1
+      ansible.builtin.assert:
+        that:
+          - "{{ hosts | selectattr('name', 'defined') | map (attribute='name') }} is eq( ['bastion','classroom'] ) "
+      tags: selectattr_example
+
+    - name: Get the 'name' elements from the list of dictionaries in 'hosts'
+      vars:
+        hosts:
+          - name: bastion
+            ip:
+              - 172.25.250.254
+              - 172.25.252.1
+          - name: classroom
+            ip:
+              - 172.25.252.254
+      ansible.builtin.assert:
+        that:
+          - "{{ hosts | json_query('[*].name') }} is eq( ['bastion','classroom'] )"
+      tags: json_query
+----
 
 == Ansible Navigator
 
@@ -669,5 +711,6 @@ ansible-navigator:
 === References
 
 - Ansible Navigator settings[https://ansible-navigator.readthedocs.io/en/latest/settings/]
+
 
 
