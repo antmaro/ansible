@@ -1,6 +1,9 @@
 ---
+# This tests where using RHEL 9 VM from my local laptop
+# ip 192.168.122.141
+# To start the VM --> sudo virsh start --domain rhel9Beta
 - name: Playing with filters
-  hosts: workstation
+  hosts:  
   remote_user: root
   gather_facts: false
   vars:
@@ -10,7 +13,6 @@
     - name: Create var which is mandatory
       debug:
         msg: "This var should be mandatory {{ test | mandatory }}"
-    
 
     - name: Create users with optionan homedir
       user:
@@ -25,3 +27,21 @@
         - name: toni
         - name: pepe
    
+- name: Playing with selectattr
+  hosts: localhost
+  become: false
+  vars:
+   hosts:
+     - name: bastion
+       ip:
+         - 172.25.250.254
+         - 172.25.252.1
+     - name: classroom
+       ip:
+         - 172.25.252.254
+
+  tasks:
+    - name: Debug using selectattr the 'name' elements from the list of dictionaries in 'hosts'
+      ansible.builtin.debug:
+        msg:
+          - "{{ hosts | selectattr('name', '==', 'bastion')| map(attribute='ip') }}" 

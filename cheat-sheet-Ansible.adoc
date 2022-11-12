@@ -590,6 +590,12 @@ Difference between `query` and `lookup` plugins are:
 
 ==== Using selectattr filter
 
+Resources:
+[compact]
+----
+* [https://docs.ansible.com/ansible/latest/user_guide/complex_data_manipulation.html]
+* http://blog.networktocode.com/post/jinja-map-review/
+----
 [source,yaml]
 ----
 
@@ -612,6 +618,7 @@ Difference between `query` and `lookup` plugins are:
               - 192.168.1.1
       ansible.builtin.assert:
         that:
+	  # This example verifies the 'name' key is defined and get the value of it
           - "{{ hosts | selectattr('name', 'defined') | map (attribute='name') }} is eq( ['bastion','classroom'] ) "
       tags: selectattr_example
 
@@ -627,7 +634,7 @@ Difference between `query` and `lookup` plugins are:
               - 172.25.252.254
       ansible.builtin.assert:
         that:
-          - "{{ hosts | json_query('[*].name') }} is eq( ['bastion','classroom'] )"
+          - "{{ hosts | json_query('[*].ip') }} is eq( ['bastion','classroom'] )"
       tags: json_query
 ----
 
