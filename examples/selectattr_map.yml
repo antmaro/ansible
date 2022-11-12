@@ -1,0 +1,17 @@
+- name: Playing with selectattr                                                                                                                                                        
+  hosts: localhost                                                                                                                                                                     
+  become: false                                                                                                                                                                        
+  vars:                                                                                                                                                                                
+   hosts:                                                                                                                                                                              
+     - name: bastion                                                                                                                                                                   
+       ip:                                                                                                                                                                             
+         - 172.25.250.254                                                                                                                                                              
+         - 172.25.252.1                                                                                                                                                                
+     - name: classroom                                                                                                                                                                 
+       ip:                                                                                                                                                                             
+         - 172.25.252.254                                                                                                                                                              
+  tasks:                                                                                                                                                                               
+    - name: Debug using selectattr the 'name' elements from the list of dictionaries in 'hosts'                                                                                        
+      ansible.builtin.debug:                                                                                                                                                           
+        msg:                                                                                                                                                                           
+          - "{{ hosts | selectattr('name', '==', 'bastion')| map(attribute='ip') }}" 

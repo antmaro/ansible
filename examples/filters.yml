@@ -3,11 +3,10 @@
 # ip 192.168.122.141
 # To start the VM --> sudo virsh start --domain rhel9Beta
 - name: Playing with filters
-  hosts:  
-  remote_user: root
+  hosts: rhel9vm
   gather_facts: false
   vars:
-    #test: 
+    test: 123 
   tasks:
 
     - name: Create var which is mandatory
@@ -15,6 +14,7 @@
         msg: "This var should be mandatory {{ test | mandatory }}"
 
     - name: Create users with optionan homedir
+      become: true
       user:
         name: "{{ item.name }}"
         shell: /bin/bash
