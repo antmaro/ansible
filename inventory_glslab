@@ -1,0 +1,21 @@
+localhost ansible_connection=local
+workstation ansible_python_interpreter=/home/student/.venv/labs/bin/python
+utility
+servera
+serverb
+[ipaserver]
+utility.lab.example.com
+
+[ipaservers]
+utility.lab.example.com
+
+[ipaclients]
+servera.lab.example.com
+serverb.lab.example.com
+[lb_servers]
+servera.lab.example.com
+
+[web_servers]
+serverb.lab.example.com
+
+

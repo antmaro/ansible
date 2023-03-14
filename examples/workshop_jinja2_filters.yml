@@ -1,0 +1,25 @@
+---
+- name: Workshop using Jinja2 fitlers
+  hosts: serverb
+  become: true 
+  
+  tasks:
+    - name: Slurp files
+      ansible.builtin.slurp:
+        src: "{{ item }}"
+      loop:
+          - /etc/passwd
+          - /etc/shadow
+          - /etc/group
+      register: slurped_files
+    
+    - name: Set content fact
+      ansible.builtin.set_fact:
+        etc_passwd: "{{ slurped_files['results'][0]['content'] | b64decode }}"
+        etc_shadow: "{{ slurped_files['results'][1]['content'] | b64decode }}"
+        etc_group: "{{ slurped_files['results'][2]['content'] | b64decode }}"
+    
+    - name: Debug slurped files
+      ansible.builtin.debug:
+        msg: "{{ etc_passwd }}"
+        verbosity: 2
