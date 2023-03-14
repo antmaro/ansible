@@ -2,7 +2,8 @@
 - name: Workshop using Jinja2 fitlers
   hosts: serverb
   become: true 
-  
+  vars:
+    expected_user: consultant1
   tasks:
     - name: Slurp files
       ansible.builtin.slurp:
@@ -23,3 +24,9 @@
       ansible.builtin.debug:
         msg: "{{ etc_passwd }}"
         verbosity: 2
+    
+    - name: Set passwd_line_match fact
+      vars:
+        line_search: "^{{ expected_user }}"
+      ansible.builtin.debug:
+        msg: "{{ etc_passwd | regex_search(line_search) }}"
