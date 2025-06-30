@@ -1,7 +1,7 @@
 ---
 - name: Workshop using Jinja2 fitlers
   hosts: serverb
-  become: true 
+  become: true
   vars:
     expected_user: consultant1
   tasks:
@@ -9,16 +9,16 @@
       ansible.builtin.slurp:
         src: "{{ item }}"
       loop:
-          - /etc/passwd
-          - /etc/shadow
-          - /etc/group
+        - /etc/passwd
+        - /etc/shadow
+        - /etc/group
       register: slurped_files
-    
+
     - name: Set content fact
       vars:
         line_separator: "\n"
       ansible.builtin.set_fact:
-        etc_passwd: >- 
+        etc_passwd: >-
           {{ slurped_files['results'] |
           selectattr('source', '==', '/etc/passwd') | map(attribute='content') |
           first | b64decode | split(line_separator) }}
@@ -26,16 +26,14 @@
           {{ slurped_files['results'] |
           selectattr('source', '==', '/etc/shadow') | map(attribute='content') |
           first | b64decode | split(line_separator) }}
-        etc_group: >- 
-          {{ slurped_files['results'] | 
-          selectattr('source', '==', '/etc/group') | map(attribute='content') |
-          first | b64decode | split(line_separator) }}
- 
+        etc_group: >-
+          {{ slurped_files['results'] | selectattr('source', '==', '/etc/group') | map(attribute='content') | first | b64decode | split(line_separator) }}
+
     - name: Debug slurped files
       ansible.builtin.debug:
         msg: "{{ etc_passwd }}"
         verbosity: 2
-    
+
     - name: Set passwd_line_match fact
       vars:
         line_search: "^{{ expected_user }}:"
@@ -43,7 +41,8 @@
           {% for LINE in etc_passwd -%}
             {% if LINE | regex_search(line_search) -%}
               {{ LINE }}
-            {%- endif %}
+          {%- endif %}
+
           {%- endfor %}
       ansible.builtin.debug:
         var: passwd_line_match
@@ -55,11 +54,12 @@
           {% for LINE in etc_shadow -%}
             {% if LINE | regex_search(line_search) -%}
               {{ LINE }}
-            {%- endif %}
+          {%- endif %}
+
           {%- endfor %}
       ansible.builtin.debug:
         var: shadow_line_match
-    
+
     - name: Set group_line_match fact
       vars:
         line_search: "^{{ expected_user }}:"
@@ -67,19 +67,21 @@
           {% for LINE in etc_group -%}
             {% if LINE | regex_search(line_search) -%}
               {{ LINE }}
-            {%- endif %}  
+          {%- endif %}
+
           {%- endfor %}
       ansible.builtin.debug:
         var: group_line_match
 
     - name: Set aux_group_line_match fact
       vars:
-        line_search: ":{{ expected_user }}"
+        line_search: :{{ expected_user }}
         aux_group_line_match: >-
           {% for LINE in etc_group -%}
             {% if LINE | regex_search(line_search) -%}
               {{ LINE }}
-            {%- endif %}
+          {%- endif %}
+
           {%- endfor %}
       ansible.builtin.debug:
         var: aux_group_line_match
