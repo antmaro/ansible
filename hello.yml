@@ -3,10 +3,11 @@
   hosts: all
   tasks:
     - name: Hello Message
-      debug:
-        msg: "Hello World"
-    - name: Hostname of machine 
-      shell: hostname -f
+      ansible.builtin.debug:
+        msg: Hello World
+
+    - name: Hostname of machine
       register: output
-    - debug:
-        msg: "This host is {{ output.stdout }}"
+      ansible.builtin.command: hostname -f
+    - ansible.builtin.debug:
+        msg: This host is {{ output.stdout }}

@@ -6,42 +6,41 @@
   hosts: rhel9vm
   gather_facts: false
   vars:
-    test: 123 
+    test: 123
   tasks:
-
     - name: Create var which is mandatory
-      debug:
-        msg: "This var should be mandatory {{ test | mandatory }}"
+      ansible.builtin.debug:
+        msg: This var should be mandatory {{ test | mandatory }}
 
     - name: Create users with optionan homedir
       become: true
-      user:
+      ansible.builtin.user:
         name: "{{ item.name }}"
         shell: /bin/bash
         groups: wheel
-        append: yes
+        append: true
         home: "{{ item.homedir | default(omit) }}"
       loop:
         - name: james
           homedir: /opt/james
         - name: toni
         - name: pepe
-   
+
 - name: Playing with selectattr
   hosts: localhost
   become: false
   vars:
-   hosts:
-     - name: bastion
-       ip:
-         - 172.25.250.254
-         - 172.25.252.1
-     - name: classroom
-       ip:
-         - 172.25.252.254
+    hosts:
+      - name: bastion
+        ip:
+          - 172.25.250.254
+          - 172.25.252.1
+      - name: classroom
+        ip:
+          - 172.25.252.254
 
   tasks:
     - name: Debug using selectattr the 'name' elements from the list of dictionaries in 'hosts'
       ansible.builtin.debug:
         msg:
-          - "{{ hosts | selectattr('name', '==', 'bastion')| map(attribute='ip') }}" 
+          - "{{ hosts | selectattr('name', '==', 'bastion') | map(attribute='ip') }}"
